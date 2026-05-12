@@ -4,7 +4,8 @@ from playwright.sync_api import sync_playwright, expect  # Импорт Playwrig
 with sync_playwright() as playwright:
     # Открываем браузер Chromium (не в headless режиме, чтобы видеть действия)
     browser = playwright.chromium.launch(headless=False)
-    page = browser.new_page()  # Создаем новую страницу
+    context = browser.new_context()  # Создание контекста
+    page = context.new_page() # Создание страницы
 
     # Переходим на страницу регистрации
     page.goto("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration")
@@ -27,6 +28,9 @@ with sync_playwright() as playwright:
 
     # Проверяем, что произошёл редирект на страницу "Dashboard"
     expect(page).to_have_url('https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/dashboard')
+
+    # Сохраняем состояние браузера (куки и localStorage) в файл для дальнейшего использования
+    context.storage_state(path="browser-state.json")
 
     # Проверяем видимость и текст заголовка "Dashboard"
     dashboard_header = page.get_by_test_id('dashboard-toolbar-title-text')
