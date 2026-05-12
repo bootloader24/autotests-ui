@@ -32,7 +32,17 @@ with sync_playwright() as playwright:
     # Сохраняем состояние браузера (куки и localStorage) в файл для дальнейшего использования
     context.storage_state(path="browser-state.json")
 
+# Остальной код регистрации нового пользователя без изменений
+with sync_playwright() as playwright:
+    browser = playwright.chromium.launch(headless=False)
+    context = browser.new_context(storage_state="browser-state.json") # Указываем файл с сохраненным состоянием
+    page = context.new_page()
+
+    page.goto("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/dashboard")
+
     # Проверяем видимость и текст заголовка "Dashboard"
     dashboard_header = page.get_by_test_id('dashboard-toolbar-title-text')
     expect(dashboard_header).to_be_visible()  # Проверяем видимость заголовка
     expect(dashboard_header).to_have_text("Dashboard")  # Проверяем текст заголовка
+
+    page.wait_for_timeout(5000)
