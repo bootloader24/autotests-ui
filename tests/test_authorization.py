@@ -1,6 +1,9 @@
+import pytest  # Импортируем библиотеку pytest
 from playwright.sync_api import sync_playwright, expect
 
-
+# Запуск только этого теста: python -m pytest -m authorization -s -v
+@pytest.mark.regression  # Добавили маркировку regression
+@pytest.mark.authorization  # Добавили маркировку authorization
 def test_wrong_email_or_password_authorization():
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=False)
