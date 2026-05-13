@@ -1,6 +1,9 @@
+import pytest  # Импортируем библиотеку pytest
 from playwright.sync_api import sync_playwright, expect
 
 
+@pytest.mark.regression  # Добавляем маркировку regression
+@pytest.mark.courses  # Добавляем маркировку courses
 def test_empty_courses_list():
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=False)
