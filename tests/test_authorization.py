@@ -5,17 +5,23 @@ from playwright.sync_api import expect, Page
 # Запуск только этого теста: python -m pytest -m authorization -s -v
 @pytest.mark.regression  # Добавили маркировку regression
 @pytest.mark.authorization  # Добавили маркировку authorization
-def test_wrong_email_or_password_authorization(chromium_page: Page):
+# Передаём три набора параметров
+@pytest.mark.parametrize("email, password", [
+    ("user.name@gmail.com", "password"),
+    ("user.name@gmail.com", "  "),
+    ("  ", "password")
+])
+def test_wrong_email_or_password_authorization(chromium_page: Page, email: str, password: str):
     # Переходим на страницу авторизации
     chromium_page.goto("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/login")
 
-    # Находим поле "Email" и заполняем его
+    # Находим поле "Email" и заполняем его значением из параметра email
     email_input = chromium_page.get_by_test_id('login-form-email-input').locator('input')
-    email_input.fill("user.name@gmail.com")
+    email_input.fill(email)
 
-    # Находим поле "Password" и заполняем его
+    # Находим поле "Password" и заполняем его значением из параметра password
     password_input = chromium_page.get_by_test_id('login-form-password-input').locator('input')
-    password_input.fill("password")
+    password_input.fill(password)
 
     # Находим кнопку "Login" и кликаем на нее
     login_button = chromium_page.get_by_test_id('login-page-login-button')
