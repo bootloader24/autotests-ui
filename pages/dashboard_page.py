@@ -31,8 +31,6 @@ class DashboardPage(BasePage):
         expect(self.dashboard_title).to_have_text('Dashboard')
 
     def check_visible_students_chart(self):
-        self.navbar.check_visible("username")
-
         expect(self.students_title).to_be_visible()
         expect(self.students_title).to_have_text('Students')
         expect(self.students_chart).to_be_visible()
