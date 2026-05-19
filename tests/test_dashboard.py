@@ -7,8 +7,14 @@ from pages.dashboard_page import DashboardPage
 @pytest.mark.regression
 def test_dashboard_displaying(dashboard_page_with_state: DashboardPage):
     dashboard_page_with_state.visit("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/dashboard")
-    # Добавили проверку Navbar компонента на странице Dashboard
+
+    #  Проверка отображения компонента Navbar
     dashboard_page_with_state.navbar.check_visible("username")
+
+    # Проверка отображения компонента Sidebar
+    dashboard_page_with_state.sidebar.check_visible()
+
+    # Проверка отображения элементов страницы Dashboard
     dashboard_page_with_state.check_visible_dashboard_title()
     dashboard_page_with_state.check_visible_scores_chart()
     dashboard_page_with_state.check_visible_courses_chart()
