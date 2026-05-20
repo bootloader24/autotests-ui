@@ -25,47 +25,43 @@ def test_empty_courses_list(courses_list_page: CoursesListPage):
 @pytest.mark.regression
 @pytest.mark.courses
 def test_create_course(courses_list_page: CoursesListPage, create_course_page: CreateCoursePage):
-    # 1. Открыть страницу создания курса
+    # Открыть страницу создания курса
     create_course_page.visit("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/courses/create")
-    # 2. Проверить наличие заголовка "Create course"
-    create_course_page.check_visible_create_course_title()
-    # 3. Проверить, что кнопка создания курса недоступна для нажатия
-    create_course_page.check_disabled_create_course_button()
-    # 4. Убедиться, что отображается пустой блок для предпросмотра и загрузки изображения
+    # Проверить отображение компонента панели управления курсом
+    create_course_page.create_course_toolbar_view.check_visible(is_create_course_disabled=True)
+    # Убедиться, что отображается пустой блок для предпросмотра и загрузки изображения
     create_course_page.image_upload_widget.check_visible(is_image_uploaded=False)
-    # 5. Проверить, что форма создания курса отображается и содержит значения по умолчанию.
-    create_course_page.check_visible_create_course_form(
+    # Проверить, что форма создания курса отображается и содержит значения по умолчанию.
+    create_course_page.create_course_form.check_visible(
         title="",
         estimated_time="",
         description="",
         max_score="0",
         min_score="0",
     )
-    # 6. Проверить наличие заголовка "Exercises"
-    create_course_page.check_visible_exercises_title()
-    # 7. Проверить наличие кнопки создания задания
-    create_course_page.check_visible_create_exercise_button()
-    # 8. Убедиться, что отображается блок с пустыми заданиями
+    # Проверить отображение компонента панели управления "Exercises"
+    create_course_page.create_course_exercises_toolbar_view.check_visible()
+    # Убедиться, что отображается блок с пустыми заданиями
     create_course_page.check_visible_exercises_empty_view()
 
-    # 9. Загрузить изображение для превью курса
+    # Загрузить изображение для превью курса
     create_course_page.image_upload_widget.upload_preview_image("./testdata/files/image.png")
-    # 10. Убедиться, что блок загрузки изображения отображает состояние, когда картинка успешно загружена
+    # Убедиться, что блок загрузки изображения отображает состояние, когда картинка успешно загружена
     create_course_page.image_upload_widget.check_visible(is_image_uploaded=True)
-    # 11. Заполнить форму создания курса значениями
-    create_course_page.fill_create_course_form(
+    # Заполнить форму создания курса значениями
+    create_course_page.create_course_form.fill(
         title="Playwright",
         estimated_time="2 weeks",
         description="Playwright",
         max_score="100",
         min_score="10",
     )
-    # 12. Нажать на кнопку создания курса
-    create_course_page.click_create_course_button()
+    # Нажать на кнопку создания курса
+    create_course_page.create_course_toolbar_view.click_create_course_button()
 
-    # 13. После редиректа на страницу со списком курсов проверить наличие компонента заголовка "Courses"
+    # После редиректа на страницу со списком курсов проверить наличие компонента заголовка "Courses"
     courses_list_page.toolbar_view.check_visible()
-    # 14. Проверить корректность отображаемых данных на карточке курса
+    # Проверить корректность отображаемых данных на карточке курса
     courses_list_page.course_view.check_visible(
         index=0,
         title="Playwright",
