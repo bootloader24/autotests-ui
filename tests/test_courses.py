@@ -16,10 +16,8 @@ def test_empty_courses_list(courses_list_page: CoursesListPage):
     # Проверка отображения компонента Sidebar
     courses_list_page.sidebar.check_visible()
 
-    # Проверка отображения заголовка "Courses"
-    courses_list_page.check_visible_courses_title()
-    # Проверка отображения кнопки создания курса
-    courses_list_page.check_visible_create_course_button()
+    # Проверка отображения компонента заголовка "Courses"
+    courses_list_page.toolbar_view.check_visible()
     # Проверка отображения пустого блока с текстом "There is no results"
     courses_list_page.check_visible_empty_view()
 
@@ -67,11 +65,9 @@ def test_create_course(courses_list_page: CoursesListPage, create_course_page: C
     # 13. Нажать на кнопку создания курса
     create_course_page.click_create_course_button()
 
-    # 14. После редиректа на страницу со списком курсов проверить наличие заголовка "Courses"
-    courses_list_page.check_visible_courses_title()
-    # 15. Проверить наличие кнопки создания курса
-    courses_list_page.check_visible_create_course_button()
-    # 16. Проверить корректность отображаемых данных на карточке курса
+    # 14. После редиректа на страницу со списком курсов проверить наличие компонента заголовка "Courses"
+    courses_list_page.toolbar_view.check_visible()
+    # 15. Проверить корректность отображаемых данных на карточке курса
     courses_list_page.course_view.check_visible(
         index=0,
         title="Playwright",
