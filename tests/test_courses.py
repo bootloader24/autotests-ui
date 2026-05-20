@@ -73,7 +73,7 @@ def test_create_course(courses_list_page: CoursesListPage, create_course_page: C
     courses_list_page.check_visible_create_course_button()
     # 16. Проверить корректность отображаемых данных на карточке курса
     courses_list_page.check_visible_course_card(
-        index=1,
+        index=0,
         title="Playwright",
         max_score="100",
         min_score="10",
