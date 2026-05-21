@@ -1,6 +1,9 @@
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page
 
 from components.authentication.registration_form_component import RegistrationFormComponent
+from elements.button import Button
+from elements.link import Link
+from elements.text import Text
 from pages.base_page import BasePage
 
 
@@ -11,10 +14,10 @@ class RegistrationPage(BasePage):
         # Компонент формы регистрации
         self.registration_form = RegistrationFormComponent(page)
 
-        # Локаторы элементов страницы
-        self.title = page.get_by_test_id("authentication-ui-course-title-text")
-        self.registration_button = page.get_by_test_id('registration-page-registration-button')
-        self.login_link = page.get_by_test_id("registration-page-login-link")
+        # Элементы страницы
+        self.title = Text(page, 'authentication-ui-course-title-text', 'Title')
+        self.registration_button = Button(page, 'registration-page-registration-button', 'Registration button')
+        self.login_link = Link(page, 'registration-page-login-link', 'Login link')
 
     # Метод для нажатия на кнопку "Registration"
     def click_registration_button(self):

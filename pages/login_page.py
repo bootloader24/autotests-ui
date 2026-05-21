@@ -1,4 +1,4 @@
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page
 
 from components.authentication.login_form_component import LoginFormComponent
 from elements.button import Button
