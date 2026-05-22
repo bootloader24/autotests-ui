@@ -1,6 +1,6 @@
 import pytest  # Импортируем библиотеку pytest
 
-from pages.login_page import LoginPage  # Импортируем LoginPage
+from pages.authentication.login_page import LoginPage  # Импортируем LoginPage
 
 
 @pytest.mark.regression  # Добавили маркировку regression
