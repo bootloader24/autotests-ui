@@ -73,6 +73,8 @@ class TestCourses:
         create_course_page.visit("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/courses/create")
 
         # Заполнить форму создания курса валидными данными, загрузить изображение и нажать кнопку создания курса.
+        create_course_page.image_upload_widget.upload_preview_image("./testdata/files/image.png")
+        create_course_page.image_upload_widget.check_visible(is_image_uploaded=True)
         create_course_page.create_course_form.fill(
             title="Playwright",
             estimated_time="2 weeks",
@@ -80,10 +82,10 @@ class TestCourses:
             max_score="100",
             min_score="10",
         )
-        create_course_page.image_upload_widget.upload_preview_image("./testdata/files/image.png")
         create_course_page.create_course_toolbar_view.click_create_course_button()
 
         # Проверить, что на странице с курсами отображается карточка ранее созданного курса.
+        courses_list_page.toolbar_view.check_visible()
         courses_list_page.course_view.check_visible(
             index=0,
             title="Playwright",
@@ -106,6 +108,7 @@ class TestCourses:
         create_course_page.create_course_toolbar_view.click_create_course_button()
 
         # Проверить, что на странице с курсами отображается карточка курса с обновленными данными.
+        courses_list_page.toolbar_view.check_visible()
         courses_list_page.course_view.check_visible(
             index=0,
             title="Selenium",
