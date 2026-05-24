@@ -1,3 +1,4 @@
+import allure
 import pytest  # Импортируем pytest
 from _pytest.fixtures import SubRequest
 from playwright.sync_api import Playwright, \
@@ -12,6 +13,7 @@ from pages.authentication.registration_page import RegistrationPage
     - sources=True: записываются исходные коды (например, сценарии тестов или JavaScript).
 """
 
+
 @pytest.fixture  # Используем фикстуру playwright
 def chromium_page(request: SubRequest, playwright: Playwright) -> Page:  # Аннотируем возвращаемое фикстурой значение
     browser = playwright.chromium.launch(headless=False)
@@ -23,6 +25,10 @@ def chromium_page(request: SubRequest, playwright: Playwright) -> Page:  # Ан�
     # В данном случае request.node.name содержит название текущего автотеста
     context.tracing.stop(path=f'./tracing/{request.node.name}.zip')  # Сохраняем трейсинг в файл
     browser.close()  # Закрываем браузер
+
+    # Прикрепляем файл с трейсингом к Allure отчету
+    allure.attach.file(f'./tracing/{request.node.name}.zip', name='trace', extension='zip')
+
 
 @pytest.fixture(scope='session')
 def initialize_browser_state(playwright: Playwright):
@@ -55,3 +61,6 @@ def chromium_page_with_state(initialize_browser_state, request: SubRequest, play
 
     context.tracing.stop(path=f'./tracing/{request.node.name}.zip')  # Сохраняем трейсинг в файл
     browser.close()  # Закрываем браузер
+
+    # Прикрепляем файл с трейсингом к Allure отчету
+    allure.attach.file(f'./tracing/{request.node.name}.zip', name='trace', extension='zip')
