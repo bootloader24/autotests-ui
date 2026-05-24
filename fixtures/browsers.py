@@ -1,20 +1,28 @@
 import pytest  # Импортируем pytest
+from _pytest.fixtures import SubRequest
 from playwright.sync_api import Playwright, \
     Page  # Импортируем класс страницы, будем использовать его для аннотации типов
 
 from pages.authentication.registration_page import RegistrationPage
 
+"""
+Параметры context.tracing.start():
+    - screenshots=True: записываются скриншоты каждого шага.
+    - snapshots=True: сохраняются снапшоты DOM и стилей страницы.
+    - sources=True: записываются исходные коды (например, сценарии тестов или JavaScript).
+"""
 
 @pytest.fixture  # Используем фикстуру playwright
-def chromium_page(playwright: Playwright) -> Page:  # Аннотируем возвращаемое фикстурой значение
-    # Ниже идет инициализация и открытие новой страницы
-    # Запускаем браузер
+def chromium_page(request: SubRequest, playwright: Playwright) -> Page:  # Аннотируем возвращаемое фикстурой значение
     browser = playwright.chromium.launch(headless=False)
-    # Передаем страницу для использования в тесте
-    yield browser.new_page()
-    # Закрываем браузер после выполнения тестов
-    browser.close()
+    context = browser.new_context()  # Создаем контекст для новой сессии браузера
+    context.tracing.start(screenshots=True, snapshots=True, sources=True)  # Включаем трейсинг
 
+    yield context.new_page()  # Открываем новую страницу в контексте
+
+    # В данном случае request.node.name содержит название текущего автотеста
+    context.tracing.stop(path=f'./tracing/{request.node.name}.zip')  # Сохраняем трейсинг в файл
+    browser.close()  # Закрываем браузер
 
 @pytest.fixture(scope='session')
 def initialize_browser_state(playwright: Playwright):
@@ -38,11 +46,12 @@ def initialize_browser_state(playwright: Playwright):
 
 
 @pytest.fixture
-def chromium_page_with_state(playwright: Playwright, initialize_browser_state) -> Page:
+def chromium_page_with_state(initialize_browser_state, request: SubRequest, playwright: Playwright) -> Page:
     browser = playwright.chromium.launch(headless=False)
-    # Создаём новый контекст с указанием файла сохраненного состояния
-    context = browser.new_context(storage_state="browser-state.json")
-    # Передаем страницу из контекста для использования в тесте
-    yield context.new_page()
-    # Закрываем браузер
-    browser.close()
+    context = browser.new_context(storage_state="browser-state.json")  # Создаем контекст для новой сессии браузера
+    context.tracing.start(screenshots=True, snapshots=True, sources=True)  # Включаем трейсинг
+
+    yield context.new_page()  # Открываем новую страницу в контексте
+
+    context.tracing.stop(path=f'./tracing/{request.node.name}.zip')  # Сохраняем трейсинг в файл
+    browser.close()  # Закрываем браузер
