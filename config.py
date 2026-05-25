@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Self
 
 from pydantic import BaseModel, EmailStr, FilePath, HttpUrl, DirectoryPath
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -36,5 +37,29 @@ class Settings(BaseSettings):
     tracing_dir: DirectoryPath
     browser_state_file: FilePath
 
+    # метод автоматически создаёт необходимые директории и файлы, если они отсутствуют
+    @classmethod
+    def initialize(cls) -> Self:  # Возвращает экземпляр класса Settings
+        # Указываем пути
+        videos_dir = DirectoryPath("./videos")
+        tracing_dir = DirectoryPath("./tracing")
+        browser_state_file = FilePath("browser-state.json")
+
+        # Создаем директории, если они не существуют
+        videos_dir.mkdir(exist_ok=True)  # Если директория существует, то игнорируем ошибку
+        tracing_dir.mkdir(exist_ok=True)
+        # Создаем файл состояния браузера, если его нет
+        browser_state_file.touch(exist_ok=True)  # Если файл существует, то игнорируем ошибку
+
+        # Возвращаем модель с инициализированными значениями
+        return Settings(
+            videos_dir=videos_dir,
+            tracing_dir=tracing_dir,
+            browser_state_file=browser_state_file
+        )
+
 # Проверка корректности настроек:
 # print(Settings())
+
+# Проверка инициализации директорий и файлов:
+# print(Settings.initialize())
