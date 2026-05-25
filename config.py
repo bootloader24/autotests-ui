@@ -63,3 +63,6 @@ class Settings(BaseSettings):
 
 # Проверка инициализации директорий и файлов:
 # print(Settings.initialize())
+
+# Инициализируем настройки
+settings = Settings.initialize()
