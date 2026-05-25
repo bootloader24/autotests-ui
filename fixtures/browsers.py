@@ -1,5 +1,4 @@
-import allure
-import pytest  # Импортируем pytest
+import pytest
 from _pytest.fixtures import SubRequest
 from playwright.sync_api import Playwright, \
     Page  # Импортируем класс страницы, будем использовать его для аннотации типов
