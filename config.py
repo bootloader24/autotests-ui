@@ -37,6 +37,10 @@ class Settings(BaseSettings):
     tracing_dir: DirectoryPath
     browser_state_file: FilePath
 
+    # для корректной передачи base_url в Playwright
+    def get_base_url(self) -> str:
+        return f"{self.app_url}/"
+
     # метод автоматически создаёт необходимые директории и файлы, если они отсутствуют
     @classmethod
     def initialize(cls) -> Self:  # Возвращает экземпляр класса Settings

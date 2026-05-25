@@ -6,6 +6,7 @@ from playwright.sync_api import Playwright, \
 from config import settings
 from pages.authentication.registration_page import RegistrationPage
 from tools.playwright.pages import initialize_playwright_page
+from tools.routes import AppRoute
 
 
 @pytest.fixture
@@ -16,13 +17,13 @@ def chromium_page(request: SubRequest, playwright: Playwright) -> Page:
 @pytest.fixture(scope='session')
 def initialize_browser_state(playwright: Playwright):
     browser = playwright.chromium.launch(headless=settings.headless)
-    context = browser.new_context()  # Создание контекста
+    context = browser.new_context(base_url=settings.get_base_url())  # Создание контекста
     page = context.new_page()  # Создание страницы
 
     # Работаем с регистрационной страницей через Page Object
     registration_page = RegistrationPage(page=page)
     # Переходим на страницу регистрации
-    registration_page.visit("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration")
+    registration_page.visit(AppRoute.REGISTRATION)
     # Заполняем форму регистрации
     registration_page.registration_form.fill(
         email=settings.test_user.email,
