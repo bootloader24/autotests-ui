@@ -23,6 +23,8 @@ from tools.routes import AppRoute
 @allure.suite(AllureFeature.AUTHENTICATION)
 @allure.sub_suite(AllureStory.AUTHORIZATION)
 class TestAuthorization:
+    # Группировка для исключения конфликта тестов при их параллельном запуске
+    @pytest.mark.xdist_group(name="authorization-group")
     @allure.tag(AllureTag.USER_LOGIN)
     @allure.title("User login with correct email and password")
     @allure.severity(Severity.BLOCKER)
@@ -61,6 +63,8 @@ class TestAuthorization:
         dashboard_page.navbar.check_visible(settings.test_user.username)
         dashboard_page.sidebar.check_visible()
 
+    # Группировка для исключения конфликта тестов при их параллельном запуске
+    @pytest.mark.xdist_group(name="authorization-group")
     # Передаём три набора параметров
     @pytest.mark.parametrize(
         "email, password",
