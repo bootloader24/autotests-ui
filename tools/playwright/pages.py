@@ -2,6 +2,7 @@ import allure
 from playwright.sync_api import Playwright, Page
 
 from config import settings, Browser  # импорт настроек
+from tools.playwright.mocks import mock_static_resources
 
 """
 Параметры context.tracing.start():
@@ -26,6 +27,7 @@ def initialize_playwright_page(
     context.tracing.start(screenshots=True, snapshots=True, sources=True)  # Включаем трейсинг
     # Отдельная переменная page требуется для получения доступа к пути к видеозаписи
     page = context.new_page()
+    mock_static_resources(page)  # Отключаем загрузку статических ресурсов
 
     yield page  # Открываем новую страницу в контексте
 
