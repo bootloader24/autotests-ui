@@ -11,6 +11,7 @@ on:
       - main
 
 jobs:
+  # Джоба для запуска автотестов
   run-tests:
     runs-on: ubuntu-latest
 
@@ -37,7 +38,34 @@ jobs:
         run: |
           pytest -m regression --alluredir=allure-results --numprocesses 2
 
-      # 5. Получаем историю Allure отчетов, если она существует
+      # 5. Сохраняем allure-results как артефакт
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: allure-results
+          path: allure-results
+
+  # Джоба для публикации отчета
+  publish-report:
+    runs-on: ubuntu-latest
+
+    # Запускается только после успешного завершения run-tests
+    needs: run-tests
+
+    steps:
+      # 1. Клонируем репозиторий
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      # 2. Загружаем allure-results из артефактов
+      - name: Download Allure results
+        uses: actions/download-artifact@v8
+        with:
+          name: allure-results
+          path: allure-results
+
+      # 3. Получаем историю Allure отчетов, если она существует
       - name: Get Allure history
         uses: actions/checkout@v6
         if: always()
@@ -46,7 +74,7 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
-      # 6. Генерируем Allure отчет с историей
+      # 4. Генерируем Allure отчет с историей
       - name: Generates Allure Report with history
         uses: simple-elf/allure-report-action@v1.14
         if: always()
@@ -54,7 +82,7 @@ jobs:
           allure_results: allure-results
           allure_history: allure-history
 
-      # 7. Публикуем отчет на GitHub Pages
+      # 5. Публикуем отчет на GitHub Pages
       - name: Deploy report to Github Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v4
